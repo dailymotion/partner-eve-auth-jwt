@@ -1,0 +1,22 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: jx3-init-build-push
+spec:
+  # IMPORTANT: DO NOT MODIFY BELOW THIS COMMENT
+  # This section is managed by the DEVEXP team.
+  # Any modifications may cause unintended issues.
+  pipelineRef:
+    resolver: dm-git
+    params:
+      - name: revision
+        value: main
+      - name: pathInRepo
+        value: /dm-standard/pipelines/dm-init-build-push/v2/pipeline.yaml
+  workspaces:
+    - name: shared-workspace
+      emptyDir: {}
+  taskRunTemplate:
+    serviceAccountName: tekton-bot
+  timeouts:
+    pipeline: 00h30m0s

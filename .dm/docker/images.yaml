@@ -1,0 +1,27 @@
+apiVersion: build.devexp.dailymotion.com/v1beta1
+kind: ImageBuild
+spec:
+  defaults:
+    dockerfile:
+      directory: .docker/app
+  images:
+    - name: partner-eve-auth-jwt
+      phases:
+        presubmit:
+          enabled: true
+          targets:
+            - stage: null
+              build:
+                options:
+                  - build-arg:PYTHON_VERSION=focal-3-8
+              push:
+                tags:
+                  suffix: -focal-3-8
+            - stage: prod-build
+        postsubmit:
+          enabled: true
+          targets:
+            - stage: prod-build
+              push:
+                registries:
+                  - alias: dev-images

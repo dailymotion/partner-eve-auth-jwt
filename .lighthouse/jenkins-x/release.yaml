@@ -1,0 +1,29 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: jx3-release
+spec:
+  params:
+    - name: pkg_name
+      value: eve-auth-jwt
+    - name: docker_image_app_tag_suffix
+      value: '-focal-3-8'
+    - name: release_current_version_default
+      value: '1.0.8'
+  # IMPORTANT: DO NOT MODIFY BELOW THIS COMMENT
+  # This section is managed by the DEVEXP team.
+  # Any modifications may cause unintended issues.
+  pipelineRef:
+    resolver: dm-git
+    params:
+      - name: revision
+        value: main
+      - name: pathInRepo
+        value: /dm-standard/pipelines/dm-release-python-package/v1/pipeline.yaml
+  workspaces:
+    - name: shared-workspace
+      emptyDir: {}
+  taskRunTemplate:
+    serviceAccountName: tekton-bot
+  timeouts:
+    pipeline: 00h30m0s

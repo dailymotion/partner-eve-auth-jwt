@@ -1,0 +1,7 @@
+[run]
+source = eve_auth_jwt
+omit = tests/*
+
+[report]
+exclude_lines =
+    pragma: no cover

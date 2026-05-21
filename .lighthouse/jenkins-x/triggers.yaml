@@ -1,0 +1,23 @@
+apiVersion: config.lighthouse.jenkins-x.io/v1alpha1
+kind: TriggerConfig
+spec:
+  presubmits:
+    - name: jx3-init-build-push
+      context: jx3-init-build-push
+      always_run: true
+      source: init-build-push.yaml
+    - name: jx3-quality
+      context: jx3-quality
+      always_run: true
+      source: quality.yaml
+    - name: jx3-release
+      context: jx3-release
+      always_run: true
+      source: release.yaml
+  postsubmits:
+    - name: jx3-release
+      context: jx3-release
+      source: release.yaml
+      branches:
+        - ^main$
+        - ^master$

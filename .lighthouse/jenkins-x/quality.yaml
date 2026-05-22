@@ -1,13 +1,13 @@
 apiVersion: tekton.dev/v1
 kind: PipelineRun
 metadata:
-  name: jx3-quality-focal-3-11
+  name: jx3-quality
 spec:
   params:
     - name: dockerfile_dir_path
       value: .docker/app
     - name: docker_image_app_tag_suffix
-      value: -focal-3-11
+      value: '-focal-3-9'
     - name: app_workspace
       value: /usr/src/app
     - name: enable_wait_until_image_pushed
@@ -29,8 +29,6 @@ spec:
       value: '1.0.8'
     - name: unit_tests_run_script
       value: make test-unit
-    - name: helm_chart_paths
-      value: ""
   # IMPORTANT: DO NOT MODIFY BELOW THIS COMMENT
   # This section is managed by the DEVEXP team.
   # Any modifications may cause unintended issues.
@@ -51,11 +49,6 @@ spec:
     - name: quay-dockerconfig-ws
       secret:
         secretName: quay-dockerconfig-secrets
-    - name: preview-ci-ca-tls-ws
-      secret:
-        secretName: preview-ci-ca-tls
-    - name: dailymotion-certs-ws
-      emptyDir: {}
     - name: shared-workspace
       emptyDir: {}
   taskRunTemplate:

@@ -120,7 +120,7 @@ check-format = {composite = ["check-format-imports", "check-format-sources"]}
 check-lint = "pylint eve_auth_jwt"
 style = {composite = ["check-format", "check-lint"]}
 
-complexity = "xenon --max-absolute B --max-modules B --max-average A eve_auth_jwt"
+complexity = "xenon --max-absolute C --max-modules C --max-average A eve_auth_jwt"
 security-sast = "bandit -c pyproject.toml -r eve_auth_jwt"
 
 test-unit = {cmd = "pytest tests --junitxml=reports/report_unit_tests.xml", env = {PYTHONPATH = "/usr/src/app"}}

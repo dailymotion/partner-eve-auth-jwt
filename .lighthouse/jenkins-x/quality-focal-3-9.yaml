@@ -8,6 +8,27 @@ spec:
       value: .docker/app
     - name: docker_image_app_tag_suffix
       value: -focal-3-9
+    - name: app_workspace
+      value: /usr/src/app
+    - name: enable_wait_until_image_pushed
+      value: 'true'
+    - name: style_envs
+      value:
+        - SKIP_DOCKER=true
+    - name: complexity_envs
+      value:
+        - SKIP_DOCKER=true
+    - name: security_sast_envs
+      value:
+        - SKIP_DOCKER=true
+    - name: enable_integration_tests
+      value: 'false'
+    - name: enable_functional_tests
+      value: 'false'
+    - name: release_current_version_default
+      value: '1.0.8'
+    - name: unit_tests_run_script
+      value: make test-unit
     - name: helm_chart_paths
       value: ""
   # IMPORTANT: DO NOT MODIFY BELOW THIS COMMENT

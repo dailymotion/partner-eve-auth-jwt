@@ -1,8 +1,8 @@
 # syntax = docker/dockerfile:1
 ARG PYTHON_VERSION=focal-3-8
-ARG BASE_IMAGE=quay.io/dailymotionadmin/python-dm:${PYTHON_VERSION}
 
-FROM ${BASE_IMAGE} AS ci
+# hadolint ignore=DL3006
+FROM quay.io/dailymotionadmin/python-dm:${PYTHON_VERSION} AS ci
 
 USER root
 # hadolint ignore=DL3008

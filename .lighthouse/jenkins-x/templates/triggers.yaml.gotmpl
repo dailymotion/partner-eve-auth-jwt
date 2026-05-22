@@ -2,11 +2,14 @@ apiVersion: config.lighthouse.jenkins-x.io/v1alpha1
 kind: TriggerConfig
 spec:
   presubmits:
-    - name: jx3-quality-focal-3-9
-      context: jx3-quality-focal-3-9
+  {{- $python_versions := jsonArray (strings.ReplaceAll " " "," (printf "[%s]" (getenv "PYTHON_VERSIONS"))) }}
+  {{- range $python_version := ($python_versions) }}
+    - name: jx3-quality-{{ $python_version }}
+      context: jx3-quality-{{ $python_version }}
       always_run: true
       optional: false
-      source: quality-focal-3-9.yaml
+      source: quality-{{ $python_version }}.yaml
+  {{- end}}
     - name: jx3-release-python-package
       context: jx3-release-python-package
       always_run: true

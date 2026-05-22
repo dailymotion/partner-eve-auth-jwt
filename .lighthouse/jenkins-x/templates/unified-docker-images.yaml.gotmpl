@@ -1,0 +1,32 @@
+{{- $pkg_name := (getenv "PKG_NAME") -}}
+{{- $python_builder_version := (getenv "PYTHON_BUILDER_VERSION") -}}
+apiVersion: build.devexp.dailymotion.com/v1beta1
+kind: ImageBuild
+spec:
+  defaults:
+    dockerfile:
+      directory: .docker/app
+  images:
+    - name: {{ $pkg_name }}
+      phases:
+        presubmit:
+          enabled: true
+          targets:
+          {{- $python_versions := jsonArray (strings.ReplaceAll " " "," (printf "[%s]" (getenv "PYTHON_VERSIONS"))) }}
+          {{- range $python_version := ($python_versions) }}
+            - stage: null
+              build:
+                options:
+                  - build-arg:PYTHON_VERSION={{ $python_version }}
+              push:
+                tags:
+                  suffix: -{{ $python_version }}
+          {{- end}}
+            - stage: {{ $python_builder_version }}
+        postsubmit:
+          enabled: true
+          targets:
+            - stage: {{ $python_builder_version }}
+              push:
+                registries:
+                  - alias: dev-images

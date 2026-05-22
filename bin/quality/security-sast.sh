@@ -1,3 +1,3 @@
-#!/bin/sh
-set -e
-bandit -r ./eve_auth_jwt ./tests
+#!/usr/bin/env sh
+set -ex
+pdm run security-sast "$@"

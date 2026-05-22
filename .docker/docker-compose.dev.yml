@@ -1,0 +1,49 @@
+version: "3.9"
+
+x-networks: &networks
+  networks:
+    - ns
+
+x-development-build: &development-build
+  <<: *networks
+  build:
+    context: ./..
+    dockerfile: ./.docker/app/Dockerfile
+    target: dev
+    args:
+      PYTHON_VERSION: ${PYTHON_VERSION:-focal-3-9}
+  environment:
+    - PYTHONPATH=/usr/src/app
+  depends_on:
+    - mongo
+
+x-with-reports: &with-reports
+  volumes:
+    - ./../reports:/usr/src/app/reports
+
+services:
+  mongo:
+    image: mongo:3.6.17
+    <<: *networks
+
+  quality-script:
+    <<: [*development-build, *with-reports]
+    entrypoint: ["/bin/sh", "-c", "./bin/quality/${QUALITY_SCRIPT}.sh ${EXTRA_SCRIPT_ARGS}"]
+
+  build-package:
+    <<: *development-build
+    build:
+      target: prod-build
+    entrypoint: ["/bin/sh", "-c", "pdm build -v --dest /usr/src/app/dist"]
+
+  devpi:
+    image: quay.io/dailymotionadmin/devpi-server:latest
+    <<: *networks
+    volumes:
+      - ./..:/usr/src/app
+    environment:
+      - PYTHONPATH=/usr/src/app
+
+networks:
+  ns:
+    driver: bridge

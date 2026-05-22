@@ -13,10 +13,10 @@ spec:
             - stage: null
               build:
                 options:
-                  - build-arg:PYTHON_VERSION=focal-3-8
+                  - build-arg:PYTHON_VERSION=focal-3-9
               push:
                 tags:
-                  suffix: -focal-3-8
+                  suffix: -focal-3-9
             - stage: prod-build
         postsubmit:
           enabled: true

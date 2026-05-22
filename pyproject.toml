@@ -1,0 +1,57 @@
+[project]
+name = "eve-auth-jwt"
+version = "1.0.8"
+description = "Eve JWT authentication"
+readme = "README.rst"
+authors = [
+    {name = "Olivier Poitrey", email = "rs@dailymotion.com"},
+]
+requires-python = ">=3.9"
+dependencies = [
+    "eve==0.8.1",
+    "pyjwt==1.5.3",
+    "flask==1.1.4",
+    "jinja2==2.11.3",
+    "markupsafe==2.0.1",
+    "itsdangerous==1.1.0",
+    "werkzeug==0.16.0",
+    "pymongo==3.13.0",
+]
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "setuptools>=65.0.0",
+    "bandit==1.7.9",
+    "black==21.12b0",
+    "isort==5.13.2",
+    "pylint==2.17.7",
+    "pytest>=7.1.2,<8",
+    "pytest-cov>=4.0.0,<5",
+    "xenon==0.9.1",
+    "mock==3.0.5",
+    "requests-mock==1.6.0",
+]
+
+[[tool.pdm.source]]
+name = "pypi"
+url = "https://pypi.dm.gg/simple"
+verify_ssl = true
+
+[tool.pdm.build]
+includes = ["eve_auth_jwt/"]
+
+[tool.pdm.scripts]
+format-imports = "isort eve_auth_jwt tests"
+format-sources = "black -l 79 --target-version py39 eve_auth_jwt tests"
+format = {composite = ["format-imports", "format-sources"]}
+check-format-imports = "isort --check-only eve_auth_jwt tests"
+check-format-sources = "black -l 79 --target-version py39 --check eve_auth_jwt tests"
+check-format = {composite = ["check-format-imports", "check-format-sources"]}
+style = "pylint eve_auth_jwt"
+complexity = "xenon --max-absolute B --max-modules B --max-average A eve_auth_jwt"
+security-sast = "bandit -r eve_auth_jwt"
+test-unit = "pytest tests --junitxml=reports/report_unit_tests.xml"
+
+[build-system]
+requires = ["pdm-pep517"]
+build-backend = "pdm.pep517.api"

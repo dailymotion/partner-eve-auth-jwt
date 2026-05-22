@@ -7,7 +7,7 @@ spec:
     - name: dockerfile_dir_path
       value: .docker/app
     - name: docker_image_app_tag_suffix
-      value: '-focal-3-8'
+      value: '-focal-3-9'
     - name: enable_integration_tests
       value: 'false'
     - name: enable_functional_tests

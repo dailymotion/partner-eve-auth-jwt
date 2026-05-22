@@ -7,7 +7,7 @@ spec:
     - name: pkg_name
       value: eve-auth-jwt
     - name: docker_image_app_tag_suffix
-      value: '-focal-3-8'
+      value: '-focal-3-9'
     - name: release_current_version_default
       value: '1.0.8'
   # IMPORTANT: DO NOT MODIFY BELOW THIS COMMENT

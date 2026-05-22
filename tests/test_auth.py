@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 
 import unittest
+
 import jwt
 from eve import Eve
-from eve_auth_jwt import JWTAuth
 from flask import g
-from eve_auth_jwt.tests import test_routes
 
+from eve_auth_jwt import JWTAuth
+from eve_auth_jwt.tests import test_routes
 
 settings = {
     "MONGO_URI": "mongodb://mongo:27017",

@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:3.6.17
+    networks:
+      - ns
+
+  app:
+    build:
+      context: ./..
+      dockerfile: ./.docker/app/Dockerfile
+      target: dev
+      args:
+        PYTHON_VERSION: ${PYTHON_VERSION:-focal-3-9}
+    environment:
+      - PYTHONPATH=/usr/src/app
+    networks:
+      - ns
+    depends_on:
+      - mongo
+
+networks:
+  ns:

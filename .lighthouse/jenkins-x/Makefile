@@ -3,7 +3,7 @@
 .DEFAULT_GOAL := generate-pipelines
 
 PKG_NAME ?= partner-eve-auth-jwt
-PYTHON_VERSIONS := focal-3-9
+PYTHON_VERSIONS := focal-3-9 focal-3-10 focal-3-11
 PYTHON_BUILDER_VERSION := prod-build
 
 JENKINS_X_DIR = $(realpath $(dir $(realpath $(lastword $(MAKEFILE_LIST)))))

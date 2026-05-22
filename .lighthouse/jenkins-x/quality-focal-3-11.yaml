@@ -1,0 +1,43 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: jx3-quality-focal-3-11
+spec:
+  params:
+    - name: dockerfile_dir_path
+      value: .docker/app
+    - name: docker_image_app_tag_suffix
+      value: -focal-3-11
+    - name: helm_chart_paths
+      value: ""
+  # IMPORTANT: DO NOT MODIFY BELOW THIS COMMENT
+  # This section is managed by the DEVEXP team.
+  # Any modifications may cause unintended issues.
+  pipelineRef:
+    resolver: dm-git
+    params:
+      - name: revision
+        value: main
+      - name: pathInRepo
+        value: /dm-standard/pipelines/dm-quality/v1/pipeline.yaml
+  workspaces:
+    - name: gar-outils-dockerconfig-ws
+      secret:
+        secretName: gar-outils-dockerconfig-secrets
+    - name: harbor-dockerconfig-ws
+      secret:
+        secretName: harbor-dockerconfig-secrets
+    - name: quay-dockerconfig-ws
+      secret:
+        secretName: quay-dockerconfig-secrets
+    - name: preview-ci-ca-tls-ws
+      secret:
+        secretName: preview-ci-ca-tls
+    - name: dailymotion-certs-ws
+      emptyDir: {}
+    - name: shared-workspace
+      emptyDir: {}
+  taskRunTemplate:
+    serviceAccountName: tekton-bot
+  timeouts:
+    pipeline: 00h30m0s

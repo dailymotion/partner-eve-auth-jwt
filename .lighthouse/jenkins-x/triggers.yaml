@@ -7,6 +7,16 @@ spec:
       always_run: true
       optional: false
       source: quality-focal-3-9.yaml
+    - name: jx3-quality-focal-3-10
+      context: jx3-quality-focal-3-10
+      always_run: true
+      optional: false
+      source: quality-focal-3-10.yaml
+    - name: jx3-quality-focal-3-11
+      context: jx3-quality-focal-3-11
+      always_run: true
+      optional: false
+      source: quality-focal-3-11.yaml
     - name: jx3-release-python-package
       context: jx3-release-python-package
       always_run: true

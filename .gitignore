@@ -42,7 +42,8 @@ htmlcov/
 nosetests.xml
 coverage.xml
 *,cover
-reports/
+reports/*
+!reports/.gitkeep
 
 # Translations
 *.mo

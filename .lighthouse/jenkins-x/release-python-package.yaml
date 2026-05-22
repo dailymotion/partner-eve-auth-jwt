@@ -1,7 +1,7 @@
 apiVersion: tekton.dev/v1
 kind: PipelineRun
 metadata:
-  name: jx3-release
+  name: jx3-release-python-package
 spec:
   params:
     - name: pkg_name

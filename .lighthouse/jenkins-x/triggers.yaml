@@ -10,14 +10,14 @@ spec:
       context: jx3-quality
       always_run: true
       source: quality.yaml
-    - name: jx3-release
-      context: jx3-release
+    - name: jx3-release-python-package
+      context: jx3-release-python-package
       always_run: true
-      source: release.yaml
+      source: release-python-package.yaml
   postsubmits:
-    - name: jx3-release
-      context: jx3-release
-      source: release.yaml
+    - name: jx3-release-python-package
+      context: jx3-release-python-package
+      source: release-python-package.yaml
       branches:
         - ^main$
         - ^master$

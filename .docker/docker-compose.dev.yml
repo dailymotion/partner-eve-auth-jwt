@@ -26,15 +26,36 @@ services:
     image: mongo:3.6.17
     <<: *networks
 
-  quality-script:
+  app:
+    volumes:
+      - ./..:/usr/src/app
+
+  app-dev:
+    <<: *development-build
+
+  pdm: &pdm
+    <<: *development-build
+    build:
+      context: ./..
+      dockerfile: ./.docker/app/Dockerfile
+      target: pdm
+    entrypoint: pdm
+    volumes:
+      - ./../pyproject.toml:/usr/src/app/pyproject.toml
+
+  pdm-script:
+    <<: [*development-build, *with-reports]
+    entrypoint: pdm run
+
+  quality-script: &quality-script
     <<: [*development-build, *with-reports]
     entrypoint: ["/bin/sh", "-c", "./bin/quality/${QUALITY_SCRIPT}.sh ${EXTRA_SCRIPT_ARGS}"]
 
   build-package:
-    <<: *development-build
-    build:
-      target: prod-build
-    entrypoint: ["/bin/sh", "-c", "pdm build -v --dest /usr/src/app/dist"]
+    <<: *pdm
+    command: build -v
+    volumes:
+      - ./..:/usr/src/app
 
   devpi:
     image: quay.io/dailymotionadmin/devpi-server:latest

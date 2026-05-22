@@ -5,7 +5,7 @@
 groups = ["default", "dev"]
 strategy = ["cross_platform", "inherit_metadata"]
 lock_version = "4.4.2"
-content_hash = "sha256:c47f7b570639c1773fa0352519a49d1d055690bf3452219d39368d5ddf3259cb"
+content_hash = "sha256:8f21331f54a887408cf529ccc4dcf919e5f99452e48821582c1d5a828edde0b2"
 
 [[package]]
 name = "astroid"
@@ -35,6 +35,22 @@ dependencies = [
     "colorama>=0.3.9; platform_system == \"Windows\"",
     "rich",
     "stevedore>=1.20.0",
+]
+files = [
+    {file = "bandit-1.7.9-py3-none-any.whl", hash = "sha256:52077cb339000f337fb25f7e045995c4ad01511e716e5daac37014b9752de8ec"},
+    {file = "bandit-1.7.9.tar.gz", hash = "sha256:7c395a436743018f7be0a4cbb0a4ea9b902b6d87264ddecf8cfdc73b4f78ff61"},
+]
+
+[[package]]
+name = "bandit"
+version = "1.7.9"
+extras = ["toml"]
+requires_python = ">=3.8"
+summary = "Security oriented static analyser for python code."
+groups = ["dev"]
+dependencies = [
+    "bandit==1.7.9",
+    "tomli>=1.1.0; python_version < \"3.11\"",
 ]
 files = [
     {file = "bandit-1.7.9-py3-none-any.whl", hash = "sha256:52077cb339000f337fb25f7e045995c4ad01511e716e5daac37014b9752de8ec"},
@@ -223,7 +239,7 @@ version = "0.4.6"
 requires_python = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7"
 summary = "Cross-platform colored terminal text."
 groups = ["dev"]
-marker = "platform_system == \"Windows\" or sys_platform == \"win32\" or python_version > \"3.4\""
+marker = "sys_platform == \"win32\" or platform_system == \"Windows\" or python_version > \"3.4\""
 files = [
     {file = "colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"},
     {file = "colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44"},

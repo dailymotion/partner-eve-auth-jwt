@@ -1,8 +1,9 @@
 apiVersion: tekton.dev/v1
 kind: PipelineRun
 metadata:
-  name: jx3-release-python-package
+  name: jx3-check-next-version
 spec:
+  params: []
   # IMPORTANT: DO NOT MODIFY BELOW THIS COMMENT
   # This section is managed by the DEVEXP team.
   # Any modifications may cause unintended issues.
@@ -12,19 +13,8 @@ spec:
       - name: revision
         value: main
       - name: pathInRepo
-        value: /dm-standard/pipelines/dm-release-python-package/v1/pipeline.yaml
+        value: /dm-standard/pipelines/dm-check-next-version/v1/pipeline.yaml
   workspaces:
-    - name: gar-outils-dockerconfig-ws
-      secret:
-        secretName: gar-outils-dockerconfig-secrets
-    - name: harbor-dockerconfig-ws
-      secret:
-        secretName: harbor-dockerconfig-secrets
-    - name: quay-dockerconfig-ws
-      secret:
-        secretName: quay-dockerconfig-secrets
-    - name: python-package-build-ws
-      emptyDir: {}
     - name: shared-workspace
       emptyDir: {}
   taskRunTemplate:

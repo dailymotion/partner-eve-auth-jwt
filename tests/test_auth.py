@@ -3,6 +3,7 @@
 import unittest
 
 import jwt
+
 from eve import Eve
 from flask import g
 

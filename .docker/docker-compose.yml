@@ -10,7 +10,7 @@ services:
     build:
       context: ./..
       dockerfile: ./.docker/app/Dockerfile
-      target: dev
+      target: prod
       args:
         PYTHON_VERSION: ${PYTHON_VERSION:-focal-3-9}
     environment:
@@ -22,3 +22,4 @@ services:
 
 networks:
   ns:
+    driver: bridge

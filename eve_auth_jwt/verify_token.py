@@ -1,4 +1,5 @@
 import jwt
+
 from eve.utils import config
 
 

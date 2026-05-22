@@ -2,6 +2,7 @@
 name = "eve-auth-jwt"
 version = "1.0.8"
 description = "Eve JWT authentication"
+license = {text = "Dailymotion"}
 readme = "README.rst"
 authors = [
     {name = "Olivier Poitrey", email = "rs@dailymotion.com"},
@@ -20,8 +21,8 @@ dependencies = [
 
 [tool.pdm.dev-dependencies]
 dev = [
-    "setuptools>=65.0.0",
-    "bandit==1.7.9",
+    "setuptools>=65.3.0",
+    "bandit[toml]==1.7.9",
     "black==21.12b0",
     "isort==5.13.2",
     "pylint==2.17.7",
@@ -38,19 +39,98 @@ url = "https://pypi.dm.gg/simple"
 verify_ssl = true
 
 [tool.pdm.build]
+excludes = ["./**/.git"]
 includes = ["eve_auth_jwt/"]
+source-includes = ["tests", "README.rst"]
+
+[tool.bandit]
+skips = []
+
+[tool.black]
+line-length = 79
+target-version = ["py39"]
+
+[tool.isort]
+py_version = 39
+profile = "black"
+line_length = 79
+indent = "    "
+known_first_party = ["eve_auth_jwt", "tests"]
+combine_as_imports = true
+lines_between_types = true
+
+[tool.coverage.run]
+branch = true
+data_file = "reports/.coverage"
+omit = ["tests/*"]
+
+[tool.coverage.report]
+show_missing = true
+
+[tool.pylint.basic]
+good-names = ["_", "__", "___", "e", "i", "j", "k", "sq", "fn", "fh", "js", "ts", "rx", "logger"]
+bad-names = ["foo", "bar", "baz", "toto", "tata", "tutu", "coucou"]
+class-attribute-rgx = "([A-Za-z_][A-Za-z0-9_]{1,40}|(__.*__))$"
+function-rgx = "[a-z_][a-z0-9_]{2,50}$"
+method-rgx = "[a-z_][a-z0-9_]{2,50}$"
+
+[tool.pylint.design]
+max-args = 6
+max-locals = 12
+max-returns = 10
+max-branches = 15
+max-statements = 100
+max-public-methods = 30
+
+[tool.pylint.format]
+max-line-length = 79
+max-module-lines = 500
+indent-string = "    "
+
+[tool.pylint.miscellaneous]
+notes = ["FIXME", "NINJA"]
+
+[tool.pylint.messages_control]
+disable = [
+    "C0111",
+    "E0602",
+    "I0011",
+    "R0801",
+    "R0903",
+    "W0223",
+    "W0603",
+    "W1202",
+    "C0301",
+    "C0412",
+    "W0703",
+    "E1121",
+    "C0209",
+]
 
 [tool.pdm.scripts]
-format-imports = "isort eve_auth_jwt tests"
-format-sources = "black -l 79 --target-version py39 eve_auth_jwt tests"
+format-imports-cmd = "isort"
+format-sources-cmd = "black"
+format-imports = "pdm run format-imports-cmd eve_auth_jwt tests"
+format-sources = "pdm run format-sources-cmd -l 79 --target-version py39 eve_auth_jwt tests"
 format = {composite = ["format-imports", "format-sources"]}
+
 check-format-imports = "isort --check-only eve_auth_jwt tests"
 check-format-sources = "black -l 79 --target-version py39 --check eve_auth_jwt tests"
 check-format = {composite = ["check-format-imports", "check-format-sources"]}
-style = "pylint eve_auth_jwt"
+check-lint = "pylint eve_auth_jwt"
+style = {composite = ["check-format", "check-lint"]}
+
 complexity = "xenon --max-absolute B --max-modules B --max-average A eve_auth_jwt"
-security-sast = "bandit -r eve_auth_jwt"
-test-unit = "pytest tests --junitxml=reports/report_unit_tests.xml"
+security-sast = "bandit -c pyproject.toml -r eve_auth_jwt"
+
+test-unit = {cmd = "pytest tests --junitxml=reports/report_unit_tests.xml", env = {PYTHONPATH = "/usr/src/app"}}
+test = {composite = ["test-unit"]}
+quality-checks = {composite = ["style", "complexity", "security-sast", "test"]}
+check-dependencies = "pdm install --check --dry-run"
+
+[tool.pytest.ini_options]
+junit_family = "xunit2"
+pythonpath = "."
 
 [build-system]
 requires = ["pdm-pep517"]

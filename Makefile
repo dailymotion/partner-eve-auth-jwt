@@ -1,17 +1,10 @@
-VERSION = $(shell git rev-parse --short HEAD)
-TO := _
-
-ifdef BUILD_NUMBER
-NUMBER = $(BUILD_NUMBER)
-else
-NUMBER = 1
-endif
+# -*- mode: makefile -*-
 
 COMPOSE_CMD = $(shell \
 	if command -v docker >/dev/null 2>&1 && docker compose version >/dev/null 2>&1; then \
-		echo "docker compose"; \
+		echo "docker --log-level ERROR compose"; \
 	else \
-		echo "docker-compose"; \
+		echo "docker-compose --log-level ERROR"; \
 	fi \
 )
 
@@ -20,18 +13,8 @@ COMPOSE = $(COMPOSE_CMD) \
 	-f ./.docker/docker-compose.dev.yml \
 	-p partner_eve_auth_jwt
 
-ifdef JOB_BASE_NAME
-PROJECT_ENCODED_SLASH = $(subst %2F,$(TO),$(JOB_BASE_NAME))
-PROJECT = $(subst /,$(TO),$(PROJECT_ENCODED_SLASH))
-COMPOSE := $(COMPOSE_CMD) \
-	-f ./.docker/docker-compose.yml \
-	-f ./.docker/docker-compose.dev.yml \
-	-f docker-compose.ci.yml \
-	-p partner_eve_auth_jwt_$(PROJECT)_$(NUMBER)
-endif
-
 BUILD = COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 $(COMPOSE) build
-RUN = $(COMPOSE) run $(EXTRA_RUN_ARGS) --rm
+RUN = $(COMPOSE) $(EXTRA_RUN_FILES) run $(EXTRA_RUN_ARGS) --rm
 
 DEVPI_USER ?= dailymotion
 DEVPI_PASS ?= test1234
@@ -43,7 +26,17 @@ EXISTS_CMD = ./run.sh exists $(DEVPI_INDEX) $(DEVPI_USER) $(DEVPI_PASS) $(DEVPI_
 
 .PHONY: init
 init:
+	@mkdir -p reports
 	$(COMPOSE) up --no-start --no-build quality-script | true
+
+.PHONY: pdm-script
+pdm-script:
+ifneq ($(SKIP_DOCKER),true)
+	$(BUILD) pdm-script
+	$(RUN) pdm-script $(PDM_SCRIPT) $(EXTRA_SCRIPT_ARGS)
+else
+	pdm run $(PDM_SCRIPT) $(EXTRA_SCRIPT_ARGS)
+endif
 
 .PHONY: quality-script
 quality-script:
@@ -55,8 +48,8 @@ else
 endif
 
 .PHONY: format
-format: EXTRA_RUN_ARGS=-v $(shell pwd):/usr/src/app
 format: QUALITY_SCRIPT=format
+format: EXTRA_RUN_ARGS=-v $(shell pwd):/usr/src/app
 format: quality-script
 
 .PHONY: style
@@ -75,8 +68,33 @@ security-sast: quality-script
 test-unit: QUALITY_SCRIPT=test-unit
 test-unit: quality-script
 
+.PHONY: test-integration
+test-integration:
+	@echo "No integration tests"
+
+.PHONY: test-functional
+test-functional:
+	@echo "No functional tests"
+
 .PHONY: test
-test: test-unit
+test: test-unit test-integration test-functional
+
+.PHONY: quality-checks
+quality-checks: QUALITY_SCRIPT=quality-checks
+quality-checks: quality-script
+
+.PHONY: pdm
+pdm:
+ifneq ($(SKIP_DOCKER),true)
+	$(BUILD) pdm
+	$(RUN) pdm $(PDM_CMD)
+else
+	pdm $(PDM_CMD)
+endif
+
+.PHONY: check-dependencies
+check-dependencies: PDM_SCRIPT=check-dependencies
+check-dependencies: pdm-script
 
 .PHONY: build
 build:
@@ -89,7 +107,7 @@ publish:
 
 .PHONY: down
 down:
-	$(COMPOSE) down --volume
+	$(COMPOSE) down --volumes --rmi=local
 
 .PHONY: get-version
 get-version:

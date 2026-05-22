@@ -50,6 +50,18 @@ COPY --chown=dm tests tests
 RUN --mount=type=cache,uid=1000,gid=1000,mode=0755,id=pdm,target=/app/.cache/pdm \
         pdm sync -G :all --prod
 
+# #### #
+# Prod #
+# #### #
+# hadolint ignore=DL3006
+FROM $BASE_IMAGE:$PYTHON_VERSION AS prod
+
+WORKDIR /usr/src/app
+
+ENV PATH="/opt/.venv/bin:$PATH"
+
+COPY --from=prod-build --chown=dm /opt/.venv /opt/.venv
+
 # ### #
 # Dev #
 # ### #

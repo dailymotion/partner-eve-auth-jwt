@@ -2,19 +2,32 @@ apiVersion: config.lighthouse.jenkins-x.io/v1alpha1
 kind: TriggerConfig
 spec:
   presubmits:
+    - name: jx3-quality-focal-3-9
+      context: jx3-quality-focal-3-9
+      always_run: true
+      optional: false
+      source: quality-focal-3-9.yaml
+    - name: jx3-release-python-package
+      context: jx3-release-python-package
+      always_run: true
+      optional: false
+      source: release-python-package.yaml
+    - name: jx3-check-next-version
+      context: jx3-check-next-version
+      always_run: false
+      optional: false
+      source: check-next-version.yaml
     - name: jx3-init-build-push
       context: jx3-init-build-push
       always_run: true
       source: init-build-push.yaml
-    - name: jx3-quality
-      context: jx3-quality
-      always_run: true
-      source: quality.yaml
-    - name: jx3-release-python-package
-      context: jx3-release-python-package
-      always_run: true
-      source: release-python-package.yaml
   postsubmits:
+    - name: jx3-init-build-push
+      context: jx3-init-build-push
+      source: init-build-push.yaml
+      branches:
+        - ^main$
+        - ^master$
     - name: jx3-release-python-package
       context: jx3-release-python-package
       source: release-python-package.yaml

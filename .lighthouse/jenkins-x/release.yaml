@@ -23,6 +23,8 @@ spec:
   workspaces:
     - name: shared-workspace
       emptyDir: {}
+    - name: python-package-build-ws
+      emptyDir: {}
   taskRunTemplate:
     serviceAccountName: tekton-bot
   timeouts:
